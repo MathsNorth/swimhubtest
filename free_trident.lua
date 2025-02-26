@@ -28,13 +28,13 @@ if not LPH_OBFUSCATED then
 	LPH_CRASH = function()
 		return print(debug.traceback());
 	end;
-    SWG_DiscordUser = "swim"
+    SWG_DiscordUser = "maths"
     SWG_DiscordID = 1337
     SWG_Private = true
     SWG_Dev = false
-    SWG_Version = "free"
-    SWG_Title = 'free swimhub.xyz %s - %s | discord.gg/priv9'
-    SWG_ShortName = 'free'
+    SWG_Version = "Paid"
+    SWG_Title = 'Paid MathsExploits %s - %s | discord.gg/xxxx'
+    SWG_ShortName = 'Paid'
     SWG_FullName = 'ts'
     SWG_FFA = false
 end;
@@ -52,55 +52,55 @@ local Mouse = LocalPlayer:GetMouse()
 local Camera = workspace.CurrentCamera
 
 local function getfile(name)
-    local repo = "https://raw.githubusercontent.com/SWIMHUBISWIMMING/swimhub/main/"
+    local repo = "https://raw.githubusercontent.com/MathsNorth/swimhubtest/main/"
     local success, content = pcall(game.HttpGet, game, repo..name)
     if success then return content else return print("getfile returned error \""..content.."\"") end
 end
-local function isswimhubfile(file)
-    return isfile("swimhub/new/files/"..file)
+local function isMathsNorthfile(file)
+    return isfile("MathsNorth/new/files/"..file)
 end
-local function readswimhubfile(file)
-    if not isswimhubfile(file) then return false end
-    local success, returns = pcall(readfile, "swimhub/new/files/"..file)
+local function readMathsNorthfile(file)
+    if not isMathsNorthfile(file) then return false end
+    local success, returns = pcall(readfile, "MathsNorth/new/files/"..file)
     if success then return returns else return print(returns) end
 end
-local function loadswimhubfile(file)
-    if not isswimhubfile(file) then return false end
-    local success, returns = pcall(loadstring, readswimhubfile(file))
+local function loadMathsNorthfile(file)
+    if not isMathsNorthfile(file) then return false end
+    local success, returns = pcall(loadstring, readMathsNorthfile(file))
     if success then return returns else return print(returns) end
 end
-local function getswimhubasset(file)
-    if isswimhubfile(file) then return false end
-    local success, returns = pcall(getcustomasset, "swimhub/new/files/"..file)
+local function getMathsNorthasset(file)
+    if isMathsNorthfile(file) then return false end
+    local success, returns = pcall(getcustomasset, "MathsNorth/new/files/"..file)
     if success then return returns else return print(returns) end
 end
 do
-    if not isfolder("swimhub") then makefolder("swimhub") end
-    if not isfolder("swimhub/new") then makefolder("swimhub/new") end
-    if not isfolder("swimhub/new/files") then makefolder("swimhub/new/files") end
+    if not isfolder("MathsNorth") then makefolder("MathsNorth") end
+    if not isfolder("MathsNorth/new") then makefolder("MathsNorth/new") end
+    if not isfolder("MathsNorth/new/files") then makefolder("sMathsNorth/new/files") end
     local function getfiles(force, list)
         for _, file in list do
-            if (force or not force and not isswimhubfile(file)) then
-                writefile("swimhub/new/files/"..file, getfile(file))
+            if (force or not force and not isMathsNorthfile(file)) then
+                writefile("MathsNorth/new/files/"..file, getfile(file))
             end
         end
     end
     local gotassets = getfile("assets.json")
     local assets = HttpService:JSONDecode(gotassets)
-    local localassets = readswimhubfile("assets.json")
+    local localassets = readMathsNorthfile("assets.json")
     if localassets then
         localassets = HttpService:JSONDecode(localassets)
         if localassets.version ~= assets.version then
-            writefile("swimhub/new/files/assets.json", gotassets)
+            writefile("MathsNorth/new/files/assets.json", gotassets)
             getfiles(true, assets.list)
         end
     else
-        writefile("swimhub/new/files/assets.json", gotassets)
+        writefile("MathsNorth/new/files/assets.json", gotassets)
     end
     getfiles(false, assets.list)
 end
 
--- swimhub main
+-- MathsNorth main
 
 local cheat = {
     Library = nil,
@@ -860,6 +860,7 @@ local aimbot = {
     silentwalk = false
 }
 
+
 do
     local validcharacters = {}
     local hbc, original_size, hbsize = nil, trident.original_model.Head.Size, _Vector3new(0.5, 1, 0.5)
@@ -927,6 +928,147 @@ do
         hbsize = _Vector3new(hitboxheadsizex, hitboxheadsizey, hitboxheadsizex)
     end)
 end
+
+do
+-- Serviços e Variáveis Globais
+local Players = game:GetService("Players")
+local LocalPlayer = Players.LocalPlayer
+local Mouse = LocalPlayer:GetMouse()
+local RunService = game:GetService("RunService")
+local Camera = workspace.CurrentCamera
+local UserInputService = game:GetService("UserInputService")
+local Drawing = loadstring(game:HttpGet("https://raw.githubusercontent.com/VisualRoblox/Roblox/main/UI-Libraries/Drawing.lua"))()
+
+-- Configurações do Silent Aim
+local silentAimSettings = {
+    Enabled = false,
+    FOV = {
+        Size = 100,
+        Color = Color3.fromRGB(255, 0, 0),
+        Visible = true
+    },
+    Hitbox = "Head", -- Padrão: cabeça
+    HitboxParts = {"Head", "Torso", "LeftArm", "RightArm", "LeftLeg", "RightLeg"}
+}
+
+-- Função para desenhar o FOV
+local FOVCircle = Drawing.new("Circle")
+FOVCircle.Visible = silentAimSettings.FOV.Visible
+FOVCircle.Radius = silentAimSettings.FOV.Size
+FOVCircle.Color = silentAimSettings.FOV.Color
+FOVCircle.Thickness = 2
+FOVCircle.Filled = false
+FOVCircle.Position = Vector2.new(Camera.ViewportSize.X / 2, Camera.ViewportSize.Y / 2)
+
+-- Função para calcular o jogador mais próximo dentro do FOV
+local function getClosestPlayer()
+    local closestPlayer = nil
+    local closestDistance = math.huge
+    for _, player in pairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer and player.Character then
+            local character = player.Character
+            local hitboxPart = character:FindFirstChild(silentAimSettings.Hitbox)
+            if hitboxPart then
+                local screenPoint, onScreen = Camera:WorldToScreenPoint(hitboxPart.Position)
+                if onScreen then
+                    local mousePos = Vector2.new(Mouse.X, Mouse.Y)
+                    local hitboxPos = Vector2.new(screenPoint.X, screenPoint.Y)
+                    local distance = (mousePos - hitboxPos).Magnitude
+                    if distance < FOVCircle.Radius and distance < closestDistance then
+                        closestDistance = distance
+                        closestPlayer = player
+                    end
+                end
+            end
+        end
+    end
+    return closestPlayer
+end
+
+-- Função de Silent Aim
+local function silentAim()
+    if not silentAimSettings.Enabled then return end
+    local closestPlayer = getClosestPlayer()
+    if closestPlayer and closestPlayer.Character then
+        local hitboxPart = closestPlayer.Character:FindFirstChild(silentAimSettings.Hitbox)
+        if hitboxPart then
+            local screenPoint = Camera:WorldToScreenPoint(hitboxPart.Position)
+            Mouse.X, Mouse.Y = screenPoint.X, screenPoint.Y
+        end
+    end
+end
+
+-- Loop principal
+RunService.Heartbeat:Connect(function()
+    silentAim()
+end)
+
+-- Interface de Usuário (UI)
+local ui = {
+    box = {
+        aimbot = {
+            AddTab = function(name)
+                local tab = {}
+                function tab:AddToggle(flag, options)
+                    options.Callback = function(value)
+                        silentAimSettings[flag] = value
+                    end
+                end
+                function tab:AddSlider(flag, options)
+                    options.OnChanged = function(value)
+                        silentAimSettings[flag] = value
+                        if flag == "FOV_Size" then
+                            FOVCircle.Radius = value
+                        elseif flag == "FOV_Color" then
+                            FOVCircle.Color = value
+                        end
+                    end
+                end
+                function tab:AddDropdown(flag, options)
+                    options.OnChanged = function(value)
+                        silentAimSettings[flag] = value
+                    end
+                end
+                return tab
+            end
+        }
+    }
+}
+
+-- Adicionando opções à UI
+local aimbotTab = ui.box.aimbot:AddTab("Silent Aim")
+
+-- Toggle para ativar/desativar o Silent Aim
+aimbotTab:AddToggle('Enabled', {
+    Text = 'Enable Silent Aim',
+    Default = false
+})
+
+-- Slider para ajustar o tamanho do FOV
+aimbotTab:AddSlider('FOV_Size', {
+    Text = 'FOV Size',
+    Default = 100,
+    Min = 50,
+    Max = 300,
+    Rounding = 1
+})
+
+-- Dropdown para selecionar a hitbox
+aimbotTab:AddDropdown('Hitbox', {
+    Text = 'Hitbox',
+    Default = 'Head',
+    Values = silentAimSettings.HitboxParts
+})
+
+-- Slider para ajustar a cor do FOV
+aimbotTab:AddSlider('FOV_Color', {
+    Text = 'FOV Color',
+    Default = Color3.fromRGB(255, 0, 0),
+    Min = 0,
+    Max = 1,
+    Rounding = 1
+})
+
 do
     local espb = ui.box.esp:AddTab("player esp")
     local es = cheat.EspLibrary.settings.enemy
